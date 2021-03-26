@@ -1,0 +1,159 @@
+[
+  {
+    "function": {
+      "name": "sum",
+      "parameters": [
+        {
+          "name": "a",
+          "type": "int"
+        },
+        {
+          "name": "b",
+          "type": "int"
+        }
+      ],
+      "type": "int",
+      "body": [
+        {
+          "return": {
+            "plus": [
+              {
+                "id": "a"
+              },
+              {
+                "id": "b"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function": {
+      "name": "sum",
+      "parameters": [
+        {
+          "name": "values",
+          "type": "List<Int>"
+        }
+      ],
+      "type": "int",
+      "body": [
+        {
+          "return": {
+            "id": "values"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function": {
+      "name": "plus_one",
+      "parameters": [
+        {
+          "name": "a",
+          "type": "int"
+        }
+      ],
+      "type": "int",
+      "body": [
+        {
+          "return": {
+            "plus": [
+              {
+                "id": "a"
+              },
+              {
+                "integer": "1"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "if": {
+      "condition": {
+        "plus": [
+          {
+            "integer": "1"
+          },
+          {
+            "multiply": [
+              {
+                "integer": "2"
+              },
+              {
+                "integer": "3"
+              }
+            ]
+          }
+        ]
+      },
+      "body": [
+        {
+          "if": {
+            "condition": {
+              "boolean": "true"
+            },
+            "body": [
+              {
+                "let": {
+                  "name": "a",
+                  "value": {
+                    "string": "\"hello mama\""
+                  }
+                }
+              },
+              {
+                "let": {
+                  "name": "c",
+                  "value": {
+                    "id": "a"
+                  }
+                }
+              },
+              {
+                "let": {
+                  "name": "c",
+                  "value": {
+                    "boolean": "false"
+                  }
+                }
+              },
+              {
+                "let": {
+                  "name": "k",
+                  "value": {
+                    "id": "c"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "elseBody": [
+        {
+          "let": {
+            "name": "a",
+            "value": {
+              "integer": "1"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "let": {
+      "name": "a",
+      "value": {
+        "boolean": "false"
+      }
+    }
+  }
+]
