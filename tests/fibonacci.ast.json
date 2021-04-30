@@ -1,0 +1,121 @@
+[
+  {
+    "function": {
+      "name": "printf",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "type": "void"
+    }
+  },
+  {
+    "function": {
+      "name": "fib",
+      "parameters": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        },
+        {
+          "name": "n",
+          "type": "int"
+        }
+      ],
+      "type": "int",
+      "body": [
+        {
+          "if": {
+            "condition": {
+              "greaterThan": [
+                {
+                  "id": "n"
+                },
+                {
+                  "integer": "0"
+                }
+              ]
+            },
+            "body": [
+              {
+                "return": {
+                  "call": {
+                    "id": "fib",
+                    "args": [
+                      {
+                        "plus": [
+                          {
+                            "id": "x"
+                          },
+                          {
+                            "id": "y"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "y"
+                      },
+                      {
+                        "minus": [
+                          {
+                            "id": "n"
+                          },
+                          {
+                            "integer": "1"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "elseBody": [
+              {
+                "return": {
+                  "plus": [
+                    {
+                      "id": "x"
+                    },
+                    {
+                      "id": "y"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "id": "printf",
+      "args": [
+        {
+          "call": {
+            "id": "fib",
+            "args": [
+              {
+                "integer": "0"
+              },
+              {
+                "integer": "1"
+              },
+              {
+                "integer": "10"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

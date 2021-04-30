@@ -1,43 +1,25 @@
 ```
-sum(a: int, b: int): int
-  return a + b
+external printf(text: String)
 
-sum(values: List<Int>): int
-  return values
+fib(x: int, y: int, n: int): int
+  if(n > 0)
+    return fib(x + y, y, n - 1)
+  else
+    return x + y
 
-plus_one(a: int): int
-  return a + 1
-
-if(1 + 2 * 3)
-  if(true)
-    let a = "hello mama"
-    let c = a
-    let c = false
-    let k = c
-else
-  let a = 1
-let a = false
+printf(fib(0, 1, 10))
 ```
 
 becomes
 
 ```c
-int sum(int a, int b) {
-  return a + b;
-}
-int sum(List<Int> values) {
-  return values;
-}
-int plus_one(int a) {
-  return a + 1;
-}
-if(1 + 2 * 3) {
-  if(true) {
-    char* a = "hello mama";
-    char* c = a;
-    int c = false;
-    int k = c;
+int fib(int x, int y, int n) {
+  if(n > 0) {
+    return fib(x + y, y, n - 1);
+  } else {
+    return x + y;
   }
 }
-int a = false;
+
+printf(fib(0, 1, 10));
 ```

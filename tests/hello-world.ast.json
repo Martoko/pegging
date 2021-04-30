@@ -1,0 +1,24 @@
+[
+  {
+    "function": {
+      "name": "printf",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "type": "void"
+    }
+  },
+  {
+    "call": {
+      "id": "printf",
+      "args": [
+        {
+          "string": "Hello, World!"
+        }
+      ]
+    }
+  }
+]

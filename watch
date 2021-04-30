@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-inotifywait -e modify,create,delete -m -r grammar.pegjs example main.js |
+inotifywait -e modify,create,delete -m -r tests grammar.pegjs compiler.js |
 while read -r filename event; do
-  echo "Building grammar..." &&
-  (npx pegjs --trace grammar.pegjs  2>&1 | tee trace) &&
-  echo "Running grammar..." &&
-  (node main.js  2>&1 | tee -a trace)
+  npx jest
 done

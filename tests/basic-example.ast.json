@@ -60,6 +60,14 @@
       "type": "int",
       "body": [
         {
+          "let": {
+            "name": "scoped",
+            "value": {
+              "integer": "0"
+            }
+          }
+        },
+        {
           "return": {
             "plus": [
               {
@@ -102,9 +110,25 @@
             "body": [
               {
                 "let": {
+                  "name": "scoped",
+                  "value": {
+                    "float": "0.0f"
+                  }
+                }
+              },
+              {
+                "let": {
+                  "name": "s",
+                  "value": {
+                    "id": "scoped"
+                  }
+                }
+              },
+              {
+                "let": {
                   "name": "a",
                   "value": {
-                    "string": "\"hello mama\""
+                    "string": "hello mama"
                   }
                 }
               },

@@ -12,16 +12,26 @@ Statement
  = ReturnStatement
  / IfStatement
  / Function
+ / ExternalFunction
  / Let
+ / Call
+ / "pass"
 
 Expression
  = Constant
+ / Call
  / Reference
 
-MultiplicativeExpression
- = l:Expression _ "*" _ r:MultiplicativeExpression  {return {multiply:[l,r]};}
- / l:Expression _ "/" _ r:MultiplicativeExpression  {return {divide:[l,r]};}
+ComparisonExpression
+ = l:Expression _ "==" _ r:ComparisonExpression  {return {equals:[l,r]};}
+ / l:Expression _ "<" _ r:ComparisonExpression  {return {lessThan:[l,r]};}
+ / l:Expression _ ">" _ r:ComparisonExpression  {return {greaterThan:[l,r]};}
  / Expression
+
+MultiplicativeExpression
+ = l:ComparisonExpression _ "*" _ r:MultiplicativeExpression  {return {multiply:[l,r]};}
+ / l:ComparisonExpression _ "/" _ r:MultiplicativeExpression  {return {divide:[l,r]};}
+ / ComparisonExpression
 
 ArithmeticExpression
  = l:MultiplicativeExpression _ "-" _ r:ArithmeticExpression {return {minus:[l,r]};}
@@ -38,6 +48,13 @@ IfStatement
 
 ReturnStatement
  = "return" _ expression:ArithmeticExpression {return {return: expression};}
+
+ExternalFunction
+ = "external" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL {
+  type = type ? type[2] : "void";
+  parameters = parameters ? parameters : [];
+ 	return {function: {name, parameters, type}};
+ }
 
 Function
  = name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL body:Block {
@@ -72,6 +89,13 @@ Let
  	return {let: {name, value}};
  }
 
+Call
+ = id:Id '(' args:ArgumentList ')' { return {call: {id, args}}; } 
+
+ArgumentList
+ = head:ArithmeticExpression "," _ tail:ArgumentList { return [head, ...tail]; }
+ / argument:ArithmeticExpression { return [argument]; }
+
 Reference
  = id:Id { return {id}; } 
 
@@ -97,7 +121,7 @@ Integer "integer"
   / [0-9]+ { return {integer:text()}; }
 
 String "string"
- = '"' string:[^\"]* '"' { return {string: '"' + string.join("") + '"'}; }
+ = '"' string:[^\"]* '"' { return {string: string.join("")}; }
 
 Comment
  = "//".*
