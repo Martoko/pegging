@@ -1,0 +1,15 @@
+[
+  {
+    "function": {
+      "name": "niladicFunction",
+      "parameters": [],
+      "type": "void"
+    }
+  },
+  {
+    "call": {
+      "id": "niladicFunction",
+      "args": []
+    }
+  }
+]

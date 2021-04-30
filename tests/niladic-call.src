@@ -1,0 +1,8 @@
+external niladicFunction(a:int)
+
+niladicFunction(0)
+
+methodA()
+    niladicFunction(0)
+
+methodA()
