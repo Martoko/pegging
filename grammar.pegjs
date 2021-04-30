@@ -50,14 +50,14 @@ ReturnStatement
  = "return" _ expression:ArithmeticExpression {return {return: expression};}
 
 ExternalFunction
- = "external" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL {
+ = "external" _ "fun" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL {
   type = type ? type[2] : "void";
   parameters = parameters ? parameters : [];
  	return {function: {name, parameters, type}};
  }
 
 Function
- = name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL body:Block {
+ = "fun" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL body:Block {
   type = type ? type[2] : "void";
   parameters = parameters ? parameters : [];
  	return {function: {name, parameters, type, body}};
@@ -90,7 +90,10 @@ Let
  }
 
 Call
- = id:Id '(' args:ArgumentList ')' { return {call: {id, args}}; } 
+ = id:Id '(' args:ArgumentList? ')' {
+   args = args ? args : [];
+   return {call: {id, args}};
+  } 
 
 ArgumentList
  = head:ArithmeticExpression "," _ tail:ArgumentList { return [head, ...tail]; }

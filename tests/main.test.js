@@ -9,7 +9,8 @@ const grammar = peg.generate(fs.readFileSync('grammar.pegjs', 'utf-8'));
 describe('grammar', () => {
     testFile('hello-world');
     testFile('fibonacci');
-    testFile('basic-example');
+    testFile('niladic-call');
+    // testFile('basic-example');
 });
 
 function testFile(name) {
