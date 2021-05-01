@@ -1,5 +1,5 @@
 !{#include <stdio.h>}!
 
-external fun printf(text: String)
+external fn printf(text: String)
 
 printf("Hello, World!")

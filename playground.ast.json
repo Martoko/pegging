@@ -8,14 +8,14 @@
           "type": "String"
         }
       ],
-      "type": "void"
+      "type": "Void"
     }
   },
   {
     "function": {
       "name": "main",
       "parameters": [],
-      "type": "void",
+      "type": "Void",
       "body": [
         {
           "for": {

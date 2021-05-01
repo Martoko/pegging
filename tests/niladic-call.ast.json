@@ -3,7 +3,7 @@
     "function": {
       "name": "niladicFunction",
       "parameters": [],
-      "type": "void"
+      "type": "Void"
     }
   },
   {

@@ -1,5 +1,5 @@
 external fun printf(text: String)
 
-fun main()
+fn main()
   for(var i = 0; i < 100; i = i + 1)
     printf("Hello, world!")

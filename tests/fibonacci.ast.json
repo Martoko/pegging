@@ -12,10 +12,10 @@
         },
         {
           "name": "x",
-          "type": "int"
+          "type": "I32"
         }
       ],
-      "type": "void"
+      "type": "Void"
     }
   },
   {
@@ -24,18 +24,18 @@
       "parameters": [
         {
           "name": "x",
-          "type": "int"
+          "type": "I32"
         },
         {
           "name": "y",
-          "type": "int"
+          "type": "I32"
         },
         {
           "name": "n",
-          "type": "int"
+          "type": "I32"
         }
       ],
-      "type": "int",
+      "type": "I32",
       "body": [
         {
           "if": {
@@ -107,7 +107,7 @@
     "function": {
       "name": "main",
       "parameters": [],
-      "type": "void",
+      "type": "Void",
       "body": [
         {
           "for": {

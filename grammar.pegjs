@@ -59,15 +59,15 @@ ReturnStatement
  = "return" _ expression:ArithmeticExpression {return {return: expression};}
 
 ExternalFunction
- = "external" _ "fun" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL {
-  type = type ? type[2] : "void";
+ = "external" _ "fn" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL {
+  type = type ? type[2] : "Void";
   parameters = parameters ? parameters : [];
  	return {function: {name, parameters, type}};
  }
 
 Function
- = "fun" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL body:Block {
-  type = type ? type[2] : "void";
+ = "fn" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL body:Block {
+  type = type ? type[2] : "Void";
   parameters = parameters ? parameters : [];
  	return {function: {name, parameters, type, body}};
  }
@@ -124,7 +124,7 @@ PassThroughContent
  / head:. tail:PassThroughContent { return head + tail; }
 
 Id "identifier"
- = id:([A-z<>]+ / "@"[A-z0-9<>]+) { return id.flat().join(""); }
+ = id:([A-z<>][A-z0-9<>]* / "@"[A-z0-9<>]+) { return id.flat().join(""); }
 
 Constant
  = Boolean / Float / Integer / String

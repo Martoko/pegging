@@ -28,7 +28,7 @@ function compileStatement(statement, scope, indentation) {
             : parameters.map(compileParameter).join(", ");
         return {
             compiled:
-                `${indentation}${type} ${name}(${compiledParameters}) {\n`
+                `${indentation}${compileType(type)} ${name}(${compiledParameters}) {\n`
                 + `${compileStatements(body, innerScope, indentation + "  ")}\n`
                 + `${indentation}}\n`,
             scope: functionScope
@@ -77,7 +77,7 @@ function compileStatement(statement, scope, indentation) {
         const { type, compiled } = compileExpression(value, scope);
         const [scopeHead, ...scopeTail] = scope;
         const letScope = [{ ...scopeHead, [name]: { type } }, ...scopeTail];
-        return { compiled: `${indentation}${type} ${name} = ${compiled};`, scope: letScope };
+        return { compiled: `${indentation}${compileType(type)} ${name} = ${compiled};`, scope: letScope };
     } else if ("call" in statement) {
         const { compiled, type } = compileExpression(statement, scope);
         // assert(type === "void");
@@ -117,17 +117,17 @@ function compileExpression(expression, scope) {
         const left = compileExpression(expression.equals[0], scope);
         const right = compileExpression(expression.equals[1], scope);
         assert(left.type === right.type);
-        return { compiled: `${left.compiled} == ${right.compiled}`, type: "int" };
+        return { compiled: `${left.compiled} == ${right.compiled}`, type: "Bool" };
     } else if ("greaterThan" in expression) {
         const left = compileExpression(expression.greaterThan[0], scope);
         const right = compileExpression(expression.greaterThan[1], scope);
         assert(left.type === right.type);
-        return { compiled: `${left.compiled} > ${right.compiled}`, type: "int" };
+        return { compiled: `${left.compiled} > ${right.compiled}`, type: "Bool" };
     } else if ("lessThan" in expression) {
         const left = compileExpression(expression.lessThan[0], scope);
         const right = compileExpression(expression.lessThan[1], scope);
         assert(left.type === right.type);
-        return { compiled: `${left.compiled} < ${right.compiled}`, type: "int" };
+        return { compiled: `${left.compiled} < ${right.compiled}`, type: "Bool" };
     } else if ("id" in expression) {
         const definition = scope.map(s => s[expression.id]).filter(s => s)[0];
         assert(definition !== undefined);
@@ -135,16 +135,16 @@ function compileExpression(expression, scope) {
         assert(type !== undefined);
         return { compiled: `${expression.id}`, type };
     } else if ("float" in expression) {
-        return { compiled: `${expression.float}`, type: "float" };
+        return { compiled: `${expression.float}`, type: "F32" };
     } else if ("double" in expression) {
-        return { compiled: `${expression.double}`, type: "double" };
+        return { compiled: `${expression.double}`, type: "F64" };
     } else if ("integer" in expression) {
-        return { compiled: `${expression.integer}`, type: "int" };
+        return { compiled: `${expression.integer}`, type: "I32" };
     } else if ("string" in expression) {
         // TODO: String escaping?
-        return { compiled: `\"${expression.string}\"`, type: "char*" };
+        return { compiled: `\"${expression.string}\"`, type: "String" };
     } else if ("boolean" in expression) {
-        return { compiled: `${expression.boolean}`, type: "int" };
+        return { compiled: `${expression.boolean}`, type: "Bool" };
     } else if ("call" in expression) {
         const { id, args } = expression.call;
         const definition = scope.map(s => s[id]).filter(s => s)[0];
@@ -176,8 +176,8 @@ function compileExpression(expression, scope) {
         if (definition === undefined) {
             throw `Undefined variable ${name}.`;
         }
-        const {compiled: compiledValue, type: valueType} = compileExpression(value, scope);
-        if(valueType !== definition.type) {
+        const { compiled: compiledValue, type: valueType } = compileExpression(value, scope);
+        if (valueType !== definition.type) {
             throw `Trying to assign '${value.type}' value to '${name}: ${definition.type}'.`;
         }
         return { compiled: `${name} = ${compiledValue}`, type: definition.type };
@@ -190,7 +190,25 @@ function compileExpression(expression, scope) {
 
 function compileParameter(parameter) {
     const { type, name } = parameter;
-    return `${type} ${name}`
+    return `${compileType(type)} ${name}`
+}
+
+function compileType(type) {
+    if (type == "F32") {
+        return 'float';
+    } else if (type == "F64") {
+        return 'double';
+    } else if (type == "I32") {
+        return 'int'; 
+    } else if (type == "String") {
+        return 'char*';
+    } else if (type == "Bool") {
+        return 'int';
+    } else if (type == "Void") {
+        return 'void';
+    } else {
+        return '/* UNK type */'
+    }
 }
 
 module.exports = { compile: compileStatements };
