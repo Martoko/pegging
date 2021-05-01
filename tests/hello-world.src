@@ -1,3 +1,5 @@
+!{#include <stdio.h>}!
+
 external fun printf(text: String)
 
 printf("Hello, World!")

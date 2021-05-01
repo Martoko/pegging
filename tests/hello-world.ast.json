@@ -1,5 +1,8 @@
 [
   {
+    "passThrough": "#include <stdio.h>"
+  },
+  {
     "function": {
       "name": "printf",
       "parameters": [

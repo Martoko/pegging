@@ -65,6 +65,10 @@ function compileStatement(statement, scope, indentation) {
         const { compiled, type } = compileExpression(statement, scope);
         // assert(type === "void");
         return { compiled: `${indentation}${compiled};`, scope };
+    } else if ("passThrough" in statement) {
+        const { compiled, type } = compileExpression(statement, scope);
+        // assert(type === "void");
+        return { compiled: `${indentation}${compiled}\n`, scope };
     } else {
         return { compiled: `${indentation}// UNK: ${statement}`, scope };
     }
@@ -145,6 +149,8 @@ function compileExpression(expression, scope) {
             // }
         }
         return { compiled: `${id}(${compiledArgs.map(a => a.compiled).join(", ")})`, type: returnType };
+    } else if ("passThrough" in expression) {
+        return { compiled: expression.passThrough, type: 'Any' };
     } else {
         return { compiled: `/* UNK: ${JSON.stringify(expression)} */`, type: "UNK" };
     }

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 int fib(int x, int y, int n) {
   if(n > 0) {
     return fib(x + y, y, n - 1);

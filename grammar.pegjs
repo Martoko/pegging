@@ -15,12 +15,14 @@ Statement
  / ExternalFunction
  / Let
  / Call
+ / PassThrough
  / "pass"
 
 Expression
  = Constant
  / Call
  / Reference
+ / PassThrough
 
 ComparisonExpression
  = l:Expression _ "==" _ r:ComparisonExpression  {return {equals:[l,r]};}
@@ -101,6 +103,13 @@ ArgumentList
 
 Reference
  = id:Id { return {id}; } 
+
+PassThrough 
+ = "!{" __ content:PassThroughContent { return {passThrough: content}}
+
+PassThroughContent
+ = __ "}!" { return ""; }
+ / head:. tail:PassThroughContent { return head + tail; }
 
 Id "identifier"
  = id:([A-z<>]+ / "@"[A-z0-9<>]+) { return id.flat().join(""); }
