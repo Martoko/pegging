@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+inotifywait -e modify,create,delete -m -r main.js grammar.pegjs compiler.js playground.src |
+while read -r filename event; do
+  node main.js
+done

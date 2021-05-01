@@ -1,0 +1,72 @@
+[
+  {
+    "function": {
+      "name": "printf",
+      "parameters": [
+        {
+          "name": "text",
+          "type": "String"
+        }
+      ],
+      "type": "void"
+    }
+  },
+  {
+    "function": {
+      "name": "main",
+      "parameters": [],
+      "type": "void",
+      "body": [
+        {
+          "for": {
+            "initialStatement": {
+              "var": {
+                "name": "i",
+                "value": {
+                  "integer": "0"
+                }
+              }
+            },
+            "condition": {
+              "lessThan": [
+                {
+                  "id": "i"
+                },
+                {
+                  "integer": "100"
+                }
+              ]
+            },
+            "recurringExpression": {
+              "assign": {
+                "name": "i",
+                "value": {
+                  "plus": [
+                    {
+                      "id": "i"
+                    },
+                    {
+                      "integer": "1"
+                    }
+                  ]
+                }
+              }
+            },
+            "body": [
+              {
+                "call": {
+                  "id": "printf",
+                  "args": [
+                    {
+                      "string": "Hello, world!"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
