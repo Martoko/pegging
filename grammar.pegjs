@@ -13,13 +13,15 @@ Statement
  / IfStatement
  / Function
  / ExternalFunction
- / Let
+ / ForLoop
+ / Var
  / Call
  / PassThrough
  / "pass"
 
 Expression
  = Constant
+ / Assignment
  / Call
  / Reference
  / PassThrough
@@ -46,6 +48,11 @@ IfStatement
  }
  / "if" _ "(" _ condition:ArithmeticExpression _ ")" _ EOL body:Block {
   return {if: {condition, body}};
+ }
+
+ForLoop
+ = "for" _ "("  _ initialStatement:Statement _ ";" _ condition:ArithmeticExpression _ ";" _ recurringExpression:Expression  _ ")" _ EOL body:Block {
+   return {for: {initialStatement, condition, recurringExpression, body}};
  }
 
 ReturnStatement
@@ -86,9 +93,14 @@ Indented
 Dedent
  = &{indentation -= 2; return true;}
 
-Let
- = "let" _ name:Id _ "=" _ value:ArithmeticExpression {
- 	return {let: {name, value}};
+Assignment
+ = name:Id _ "=" _ value:ArithmeticExpression {
+ 	return {assign: {name, value}};
+ }
+
+Var
+ = "var" _ name:Id _ "=" _ value:ArithmeticExpression {
+ 	return {var: {name, value}};
  }
 
 Call

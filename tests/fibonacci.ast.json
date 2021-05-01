@@ -9,6 +9,10 @@
         {
           "name": "text",
           "type": "String"
+        },
+        {
+          "name": "x",
+          "type": "int"
         }
       ],
       "type": "void"
@@ -47,22 +51,30 @@
             },
             "body": [
               {
+                "var": {
+                  "name": "z",
+                  "value": {
+                    "plus": [
+                      {
+                        "id": "x"
+                      },
+                      {
+                        "id": "y"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
                 "return": {
                   "call": {
                     "id": "fib",
                     "args": [
                       {
-                        "plus": [
-                          {
-                            "id": "x"
-                          },
-                          {
-                            "id": "y"
-                          }
-                        ]
+                        "id": "y"
                       },
                       {
-                        "id": "y"
+                        "id": "z"
                       },
                       {
                         "minus": [
@@ -82,14 +94,7 @@
             "elseBody": [
               {
                 "return": {
-                  "plus": [
-                    {
-                      "id": "x"
-                    },
-                    {
-                      "id": "y"
-                    }
-                  ]
+                  "id": "x"
                 }
               }
             ]
@@ -99,21 +104,72 @@
     }
   },
   {
-    "call": {
-      "id": "printf",
-      "args": [
+    "function": {
+      "name": "main",
+      "parameters": [],
+      "type": "void",
+      "body": [
         {
-          "call": {
-            "id": "fib",
-            "args": [
+          "for": {
+            "initialStatement": {
+              "var": {
+                "name": "i",
+                "value": {
+                  "integer": "0"
+                }
+              }
+            },
+            "condition": {
+              "lessThan": [
+                {
+                  "id": "i"
+                },
+                {
+                  "integer": "12"
+                }
+              ]
+            },
+            "recurringExpression": {
+              "assign": {
+                "name": "i",
+                "value": {
+                  "plus": [
+                    {
+                      "id": "i"
+                    },
+                    {
+                      "integer": "1"
+                    }
+                  ]
+                }
+              }
+            },
+            "body": [
               {
-                "integer": "0"
-              },
-              {
-                "integer": "1"
-              },
-              {
-                "integer": "10"
+                "call": {
+                  "id": "printf",
+                  "args": [
+                    {
+                      "string": "%d\\n"
+                    },
+                    {
+                      "call": {
+                        "id": "fib",
+                        "args": [
+                          {
+                            "integer": "0"
+                          },
+                          {
+                            "integer": "1"
+                          },
+                          {
+                            "id": "i"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }

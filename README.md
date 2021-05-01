@@ -1,25 +1,38 @@
 ```
-external printf(text: String)
+!{#include <stdio.h>}!
 
-fib(x: int, y: int, n: int): int
+external fun printf(text: String, x: int)
+
+fun fib(x: int, y: int, n: int): int
   if(n > 0)
-    return fib(x + y, y, n - 1)
+    var z = x + y
+    return fib(y, z, n - 1)
   else
-    return x + y
+    return x
 
-printf(fib(0, 1, 10))
+fun main()
+  for(var i = 0; i < 12; i = i + 1)
+    printf("%d\n", fib(0, 1, i))
 ```
 
 becomes
 
 ```c
+#include <stdio.h>
+
 int fib(int x, int y, int n) {
   if(n > 0) {
-    return fib(x + y, y, n - 1);
+    int z = x + y;
+    return fib(y, z, n - 1);
   } else {
-    return x + y;
+    return x;
   }
 }
 
-printf(fib(0, 1, 10));
+void main(void) {
+  for(int i = 0; i < 12; i = i + 1) {
+    printf("%d\n", fib(0, 1, i));
+  }
+}
+
 ```

@@ -20,12 +20,15 @@ function compileStatement(statement, scope, indentation) {
         const [scopeHead, ...scopeTail] = scope;
         const functionScope = [{ ...scopeHead, [name]: { type, parameters } }, ...scopeTail];
         const innerScope = [
-            { [name]: { type, parameters }, ...Object.fromEntries(parameters.map(p => [p.name, {type: p.type}])) },
+            { [name]: { type, parameters }, ...Object.fromEntries(parameters.map(p => [p.name, { type: p.type }])) },
             ...scope
         ]
+        const compiledParameters = parameters.length == 0
+            ? 'void'
+            : parameters.map(compileParameter).join(", ");
         return {
             compiled:
-                `${indentation}${type} ${name}(${parameters.map(compileParameter).join(", ")}) {\n`
+                `${indentation}${type} ${name}(${compiledParameters}) {\n`
                 + `${compileStatements(body, innerScope, indentation + "  ")}\n`
                 + `${indentation}}\n`,
             scope: functionScope
@@ -55,10 +58,22 @@ function compileStatement(statement, scope, indentation) {
         } else {
             return { compiled: compiledBlock, scope };
         }
+    } else if ("for" in statement) {
+        const { initialStatement, condition, recurringExpression, body } = statement.for;
+        const { compiled: compiledInitialStatement, scope: innerScope } = compileStatement(initialStatement, scope, "");
+        const { compiled: compiledCondition, type: conditionType } = compileExpression(condition, innerScope);
+        const { compiled: compiledRecurringExpression, type: recurringExpressionType } = compileExpression(recurringExpression, innerScope);
+        // assert(conditionType === "boolean");
+
+        const compiled = `${indentation}for(${compiledInitialStatement} ${compiledCondition}; ${compiledRecurringExpression}) {\n`
+            + `${compileStatements(body, innerScope, indentation + "  ")}\n`
+            + `${indentation}}`;
+
+        return { compiled: compiled, scope };
     } else if ("return" in statement) {
         return { compiled: `${indentation}return ${compileExpression(statement.return, scope).compiled};`, scope };
-    } else if ("let" in statement) {
-        const { name, value } = statement.let;
+    } else if ("var" in statement) {
+        const { name, value } = statement.var;
         const { type, compiled } = compileExpression(value, scope);
         const [scopeHead, ...scopeTail] = scope;
         const letScope = [{ ...scopeHead, [name]: { type } }, ...scopeTail];
@@ -81,6 +96,7 @@ function compileExpression(expression, scope) {
         const left = compileExpression(expression.plus[0], scope);
         const right = compileExpression(expression.plus[1], scope);
         assert(left.type === right.type);
+        assert(left.type !== undefined);
         return { compiled: `${left.compiled} + ${right.compiled}`, type: left.type };
     } else if ("minus" in expression) {
         const left = compileExpression(expression.minus[0], scope);
@@ -154,6 +170,17 @@ function compileExpression(expression, scope) {
             // }
         }
         return { compiled: `${id}(${compiledArgs.map(a => a.compiled).join(", ")})`, type: returnType };
+    } else if ("assign" in expression) {
+        const { name, value } = expression.assign;
+        const definition = scope.map(s => s[name]).filter(s => s)[0];
+        if (definition === undefined) {
+            throw `Undefined variable ${name}.`;
+        }
+        const {compiled: compiledValue, type: valueType} = compileExpression(value, scope);
+        if(valueType !== definition.type) {
+            throw `Trying to assign '${value.type}' value to '${name}: ${definition.type}'.`;
+        }
+        return { compiled: `${name} = ${compiledValue}`, type: definition.type };
     } else if ("passThrough" in expression) {
         return { compiled: expression.passThrough, type: 'Any' };
     } else {
