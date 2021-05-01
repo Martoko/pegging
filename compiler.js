@@ -1,3 +1,5 @@
+const assert = require('assert');
+
 function compileStatements(statements, scope = [{}], indentation = "") {
     // Use reduce to deal with scope changes between each compile statement
     return statements
@@ -18,7 +20,7 @@ function compileStatement(statement, scope, indentation) {
         const [scopeHead, ...scopeTail] = scope;
         const functionScope = [{ ...scopeHead, [name]: { type, parameters } }, ...scopeTail];
         const innerScope = [
-            { [name]: { type, parameters }, ...Object.fromEntries(parameters.map(p => [p.name, p.type])) },
+            { [name]: { type, parameters }, ...Object.fromEntries(parameters.map(p => [p.name, {type: p.type}])) },
             ...scope
         ]
         return {
@@ -78,40 +80,43 @@ function compileExpression(expression, scope) {
     if ("plus" in expression) {
         const left = compileExpression(expression.plus[0], scope);
         const right = compileExpression(expression.plus[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} + ${right.compiled}`, type: left.type };
     } else if ("minus" in expression) {
         const left = compileExpression(expression.minus[0], scope);
         const right = compileExpression(expression.minus[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} - ${right.compiled}`, type: left.type };
     } else if ("multiply" in expression) {
         const left = compileExpression(expression.multiply[0], scope);
         const right = compileExpression(expression.multiply[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} * ${right.compiled}`, type: left.type };
     } else if ("divide" in expression) {
         const left = compileExpression(expression.divide[0], scope);
         const right = compileExpression(expression.divide[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} / ${right.compiled}`, type: left.type };
     } else if ("equals" in expression) {
         const left = compileExpression(expression.equals[0], scope);
         const right = compileExpression(expression.equals[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} == ${right.compiled}`, type: "int" };
     } else if ("greaterThan" in expression) {
         const left = compileExpression(expression.greaterThan[0], scope);
         const right = compileExpression(expression.greaterThan[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} > ${right.compiled}`, type: "int" };
     } else if ("lessThan" in expression) {
         const left = compileExpression(expression.lessThan[0], scope);
         const right = compileExpression(expression.lessThan[1], scope);
-        // assert(left.type === right.type);
+        assert(left.type === right.type);
         return { compiled: `${left.compiled} < ${right.compiled}`, type: "int" };
     } else if ("id" in expression) {
-        const type = scope.map(s => s[expression.id]).filter(s => s)[0].type
+        const definition = scope.map(s => s[expression.id]).filter(s => s)[0];
+        assert(definition !== undefined);
+        const type = definition.type;
+        assert(type !== undefined);
         return { compiled: `${expression.id}`, type };
     } else if ("float" in expression) {
         return { compiled: `${expression.float}`, type: "float" };
