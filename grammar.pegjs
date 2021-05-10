@@ -3,11 +3,10 @@
 }
 
 Program
- = head:(Indented Statement)? tail:(EOL Indented Statement / EOL _)* {
-  tail = tail.map(x => x[2]).filter(x => x);
-  return head ? [head[1], ...tail] : [...tail];
+ = Indented statement:Statement statements:Statements (EOL _)* {
+  return [statement, ...statements];
  }
- 
+
 Statement
  = ReturnStatement
  / IfStatement
@@ -17,7 +16,6 @@ Statement
  / Var
  / Call
  / PassThrough
- / "pass"
 
 Expression
  = Constant
@@ -43,15 +41,15 @@ ArithmeticExpression
  / MultiplicativeExpression
 
 IfStatement
- = "if" _ "(" _ condition:ArithmeticExpression _ ")" _ EOL body:Block EOL Indented "else" _ EOL elseBody:Block {
+ = "if" _ "(" _ condition:ArithmeticExpression _ ")" _ body:Block EOL (_ EOL)* Indented "else" _ elseBody:Block {
   return {if: {condition, body, elseBody}};
  }
- / "if" _ "(" _ condition:ArithmeticExpression _ ")" _ EOL body:Block {
+ / "if" _ "(" _ condition:ArithmeticExpression _ ")" _ body:Block {
   return {if: {condition, body}};
  }
 
 ForLoop
- = "for" _ "("  _ initialStatement:Statement _ ";" _ condition:ArithmeticExpression _ ";" _ recurringExpression:Expression  _ ")" _ EOL body:Block {
+ = "for" _ "("  _ initialStatement:Statement _ ";" _ condition:ArithmeticExpression _ ";" _ recurringExpression:Expression  _ ")" _ body:Block {
    return {for: {initialStatement, condition, recurringExpression, body}};
  }
 
@@ -59,14 +57,14 @@ ReturnStatement
  = "return" _ expression:ArithmeticExpression {return {return: expression};}
 
 ExternalFunction
- = "external" _ "fn" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL {
+ = "external" _ "fn" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? {
   type = type ? type[2] : "Void";
   parameters = parameters ? parameters : [];
  	return {function: {name, parameters, type}};
  }
 
 Function
- = "fn" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ EOL body:Block {
+ = "fn" _ name:Id "(" _ parameters:ParameterList? _ ")"type:(":" _ Id)? _ body:Block {
   type = type ? type[2] : "Void";
   parameters = parameters ? parameters : [];
  	return {function: {name, parameters, type, body}};
@@ -80,18 +78,21 @@ Parameter
  = name:Id":" _ type:Id { return {name, type}; }
 
 Block
- = Indent statement:Statement statements:("\n" Indented Statement)* Dedent {
-  return [statement, ...statements.map(x => x[2])];
+ = Indent statements:Statements Dedent { return statements; }
+
+Statements
+ = statements:(EOL (_ EOL)* Indented Statement)* {
+  return statements.map(x => x[3]);
  }
 
 Indent
- = spaces:" "* &{const match = spaces.length == indentation+2; indentation += match ? 2 : 0; return match;}
+ = &{ indentation += 2; return true; }
 
 Indented
- = spaces:" "* &{const match = spaces.length == indentation; return match;}
+ = spaces:" "* &{ return spaces.length === indentation; }
 
 Dedent
- = &{indentation -= 2; return true;}
+ = &{ indentation -= 2; return true; }
 
 Assignment
  = name:Id _ "=" _ value:ArithmeticExpression {
@@ -151,7 +152,10 @@ Comment
  = "//".*
 
 EOL
- = !"\\" [\n;]
+ = !"\\" "\n"
+
+EOF
+ = !.
 
 _ "whitespace (excluding line breaks)"
   = [ \t]*

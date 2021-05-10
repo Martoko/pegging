@@ -13,8 +13,6 @@ function compileStatements(statements, scope = [{}], indentation = "") {
 }
 
 function compileStatement(statement, scope, indentation) {
-    if (statement === "pass") return { compiled: "", scope };
-
     if ("function" in statement && statement.function.body !== undefined) {
         const { name, parameters, type, body } = statement.function;
         const [scopeHead, ...scopeTail] = scope;

@@ -55,4 +55,6 @@ fs.readFile('playground.src', 'utf8', (err, source) => {
         }
         throw error;
     }
+
+    console.log("Compiled playground.");
 });

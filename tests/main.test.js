@@ -10,6 +10,7 @@ describe('grammar', () => {
     testFile('hello-world');
     testFile('fibonacci');
     testFile('niladic-call');
+    testFile('fibonacci-extra-whitespace');
     // testFile('basic-example');
 });
 
